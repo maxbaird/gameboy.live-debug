@@ -1,4 +1,5 @@
 # Gameboy.Live
+
 🕹️ `Gameboy.Live` is a Gameboy emulator written in go for learning purposes. You can simply play Gameboy games on your desktop:
 
 ![https://github.com/HFO4/gameboy.live/raw/master/doc/screenshot.png](https://github.com/HFO4/gameboy.live/raw/master/doc/screenshot.png)
@@ -45,7 +46,7 @@ Usage of gbdotlive:
 Play a specified ROM file in GUI mode:
 
 ```
-gbdotlive -r "Tetris.gb" 
+gbdotlive -r "Tetris.gb"
 ```
 
 ### Set up a Cloud Gaming server
@@ -55,17 +56,20 @@ You can use `Gameboy.Live` as a "Cloud Gaming" server, where players use telnet 
 A `gamelist.json` config file is required to specify game options. This is a typical example:
 
 ```json
-[{
-	"Title": "Tetris",
-	"Path": "test.gb"
-}, {
-	"Title": "Dr. Mario",
-	"Path": "Dr. Mario (JU) (V1.1).gb"
-}, {
-	"Title": "Legend of Zelda - Link's Awakening",
-	"Path": "Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb"
-}]
-
+[
+  {
+    "Title": "Tetris",
+    "Path": "test.gb"
+  },
+  {
+    "Title": "Dr. Mario",
+    "Path": "Dr. Mario (JU) (V1.1).gb"
+  },
+  {
+    "Title": "Legend of Zelda - Link's Awakening",
+    "Path": "Legend of Zelda, The - Link's Awakening (U) (V1.2) [!].gb"
+  }
+]
 ```
 
 It is recommended to test every ROM before putting them in the config file.
@@ -79,7 +83,7 @@ gbdotlive -s -c "gamelist.json"
 You will see an output like this, which means your server has started successfully:
 
 ```
-2019/04/30 21:27:56 Listen port: 1989 
+2019/04/30 21:27:56 Listen port: 1989
 ```
 
 Now, you can play games anywhere you want! The simulation and rendering process is done entirely on the server.
@@ -102,23 +106,23 @@ The emulator will firstly break at the ROM entry point `0x0100` in debug mode, w
 
 ```
 [OP:NOP]
-AF:01B0  BC:0013  DE:00D8  HL:014D  SP:FFFE   
-PC:0100  LCDC:91  IF:E1    IE:00    IME:false 
-LCD:100 
+AF:01B0  BC:0013  DE:00D8  HL:014D  SP:FFFE
+PC:0100  LCDC:91  IF:E1    IE:00    IME:false
+LCD:100
 ```
 
 ## Keyboard instruction
 
-| Keyboard | Gameboy |
-| -------- | ------- |
+| Keyboard             | Gameboy |
+| -------------------- | ------- |
 | <kbd>Enter</kbd>     | Start   |
-|<kbd>Backspace</kbd>  | Select  |
-| <kbd>↑</kbd>  | Up      |
-|  <kbd>↓</kbd> | Down    |
-|   <kbd>←</kbd> | Left    |
-|   <kbd>→</kbd>  | Right   |
-|    <kbd>X</kbd>  | B       |
-|     <kbd>Z</kbd>     | A       |
+| <kbd>Backspace</kbd> | Select  |
+| <kbd>↑</kbd>         | Up      |
+| <kbd>↓</kbd>         | Down    |
+| <kbd>←</kbd>         | Left    |
+| <kbd>→</kbd>         | Right   |
+| <kbd>X</kbd>         | B       |
+| <kbd>Z</kbd>         | A       |
 
 ## Features & TODOs
 
@@ -151,10 +155,10 @@ This emulator is just for learning and entertainment purposes. There are still m
 
 ## Reference
 
-* [Pan Docs](http://bgb.bircd.org/pandocs.htm)
-* [http://www.codeslinger.co.uk/pages/projects/gameboy/beginning.html](http://www.codeslinger.co.uk/pages/projects/gameboy/beginning.html)
-* [http://www.devrs.com/gb/files/GBCPU_Instr.html](http://www.devrs.com/gb/files/GBCPU_Instr.html)
-* [https://github.com/Humpheh/goboy](https://github.com/Humpheh/goboy)
-* [The Ultimate Game Boy Talk (33c3)](https://www.youtube.com/watch?v=HyzD8pNlpwI)
-* [http://gameboy.mongenel.com/dmg/asmmemmap.html](http://gameboy.mongenel.com/dmg/asmmemmap.html)
-* ......
+- [Pan Docs](http://bgb.bircd.org/pandocs.htm)
+- [http://www.codeslinger.co.uk/pages/projects/gameboy/beginning.html](http://www.codeslinger.co.uk/pages/projects/gameboy/beginning.html)
+- [http://www.devrs.com/gb/files/GBCPU_Instr.html](http://www.devrs.com/gb/files/GBCPU_Instr.html)
+- [https://github.com/Humpheh/goboy](https://github.com/Humpheh/goboy)
+- [The Ultimate Game Boy Talk (33c3)](https://www.youtube.com/watch?v=HyzD8pNlpwI)
+- [http://gameboy.mongenel.com/dmg/asmmemmap.html](http://gameboy.mongenel.com/dmg/asmmemmap.html)
+- ......
