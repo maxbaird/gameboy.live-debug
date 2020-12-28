@@ -5,6 +5,8 @@ import (
 	"github.com/HFO4/gbc-in-cloud/util"
 	"log"
 	"time"
+  "os"
+  "fmt"
 )
 
 type Core struct {
@@ -81,6 +83,12 @@ type Core struct {
 	Timer     Timer
 	Exit      bool
 	GameTitle string
+
+	/* debug */
+	OpcodeStart int
+	OpcodeEnd   int
+	OpcodeLimit int
+	NoStateDump bool
 }
 
 type Timer struct {
@@ -139,6 +147,8 @@ func (core *Core) Run() {
 /*
 	Render a frame.
 */
+var n int
+
 func (core *Core) Update() {
 	cyclesThisUpdate := 0
 
@@ -154,15 +164,25 @@ func (core *Core) Update() {
 			Check whether CPU is halted, when this happen, only an interrupt
 			can stop halting.
 		*/
-		if !core.CPU.Halt {
-			cycles = core.ExecuteNextOPCode()
+		n++
+
+
+		if core.NoStateDump{
+			if n == core.OpcodeLimit {
+				fmt.Println("Exiting: os.Exit")
+				os.Exit(-1)
+			}
 		}
+
+		if !core.CPU.Halt {
+			cycles = core.ExecuteNextOPCode(n)
+		}
+
 		cyclesThisUpdate += cycles
 		core.UpdateTimers(cycles)
-		core.UpdateGraphics(cycles)
+		core.UpdateGraphics(cycles, n)
 		cyclesThisUpdate += core.Interrupt()
-		core.UpdateIO(cycles)
-
+		//core.UpdateIO(cycles)
 	}
 	core.RenderScreen()
 }

@@ -1,9 +1,13 @@
 package gb
 
 import (
+	"fmt"
 	"github.com/HFO4/gbc-in-cloud/util"
 	"log"
+	"os"
 )
+
+var n2 int
 
 /*
 	Draw the current scan line
@@ -29,20 +33,26 @@ func (core *Core) DrawScanLine() {
 	}
 
 	if util.TestBit(control, 1) {
-		core.RenderSprites()
+		n2++
+		core.RenderSprites(n2)
 	}
 }
 
 /*
 	Render Sprites
 */
-func (core *Core) RenderSprites() {
+func (core *Core) RenderSprites(n int) {
 	use8x16 := false
 	lcdControl := core.ReadMemory(0xFF40)
 
 	if util.TestBit(lcdControl, 2) {
 		use8x16 = true
 	}
+
+	spriteDumper := spriteState{}
+	spriteDumper.use8x16 = use8x16
+	spriteDumper.lcdControl = int(lcdControl)
+
 	for sprite := 0; sprite < 40; sprite++ {
 		// sprite occupies 4 bytes in the sprite attributes table
 		index := sprite * 4
@@ -76,6 +86,26 @@ func (core *Core) RenderSprites() {
 
 			// its easier to read in from right to left as pixel 0 is
 			// bit 7 in the colour data, pixel 1 is bit 6 etc...
+			spriteDumper.index[sprite] = int(index)
+			spriteDumper.yPosition[sprite] = int(yPos)
+			spriteDumper.xPosition[sprite] = int(xPos)
+			spriteDumper.tileLocation[sprite] = int(tileLocation)
+			spriteDumper.attributes[sprite] = int(attributes)
+			spriteDumper.yFlip[sprite] = 0
+			if yFlip {
+				spriteDumper.yFlip[sprite] = 1
+			}
+			spriteDumper.xFlip[sprite] = 0
+			if xFlip {
+				spriteDumper.xFlip[sprite] = 1
+			}
+			spriteDumper.scanline[sprite] = int(scanline)
+			spriteDumper.ysize[sprite] = int(ysize)
+			spriteDumper.line[sprite] = int(line)
+			spriteDumper.dataAddress[sprite] = int(dataAddress)
+			spriteDumper.data1[sprite] = int(data1)
+			spriteDumper.data2[sprite] = int(data2)
+
 			for tilePixel := 7; tilePixel >= 0; tilePixel-- {
 				colourbit := tilePixel
 
@@ -129,6 +159,11 @@ func (core *Core) RenderSprites() {
 
 				pixel := int(xPos) + xPix
 
+				spriteDumper.colorbit[sprite][tilePixel] = int(colourbit)
+				spriteDumper.colorNum[sprite][tilePixel] = int(colourNum)
+				spriteDumper.colorAddress[sprite][tilePixel] = int(colourAddress)
+				spriteDumper.pixel[sprite][tilePixel] = int(pixel)
+
 				// sanity check
 				if (scanline < 0) || (scanline > 143) || (pixel < 0) || (pixel > 159) {
 					continue
@@ -143,6 +178,10 @@ func (core *Core) RenderSprites() {
 			}
 		}
 
+		//if n >= 5500 && n <= 6500 {
+		//	fname := fmt.Sprintf("/tmp/%d.gblive", n)
+		//	dumpSpriteState(&spriteDumper, fname)
+		//}
 	}
 }
 
@@ -233,6 +272,20 @@ func (core *Core) RenderTiles() {
 	// tile is the scanline on?
 	var tileRow = ((uint16(yPos / 8)) * 32)
 
+	if false {
+		os.Exit(-1)
+	}
+
+	//dumper := gpuState{}
+	//dumper.scrollx = int(scrollX)
+	//dumper.scrolly = int(scrollY)
+	//dumper.windowx = int(windowX)
+	//dumper.windowy = int(windowY)
+	//dumper.tileData = int(tileData)
+	//dumper.backgroundMemory = int(backgroundMemory)
+	//dumper.yPosition = int(yPos)
+	//dumper.tileRow = int(tileRow)
+
 	// time to start drawing the 160 horizontal pixels
 	// for this scanline
 	for pixel := byte(0); pixel < 160; pixel++ {
@@ -242,6 +295,9 @@ func (core *Core) RenderTiles() {
 		// translate the current x pos to window space if necessary
 		if usingWindow {
 			if pixel >= windowX {
+				if n == 144 {
+					fmt.Println("Using window calculation, windowx: ", windowX)
+				}
 				xPos = pixel - windowX
 			}
 		}
@@ -320,6 +376,21 @@ func (core *Core) RenderTiles() {
 			blue = 0
 		}
 		finally := int(core.ReadMemory(0xFF44))
+
+		//dumper.xPosition[pixel] = int(xPos)
+		//dumper.tileColumn[pixel] = int(tileCol)
+		//dumper.tileNumber[pixel] = int(tileNum)
+		//dumper.tileAddress[pixel] = int(tileAddress)
+		//dumper.tileLocation[pixel] = int(tileLocation)
+		//dumper.currentLine[pixel] = int(line)
+		//dumper.pixelData1[pixel] = int(data1)
+		//dumper.pixelData2[pixel] = int(data2)
+		//dumper.colourBit[pixel] = int(colourBit)
+		//dumper.colourNumber[pixel] = int(colourNum)
+		//dumper.red[pixel] = int(red)
+		//dumper.green[pixel] = int(green)
+		//dumper.blue[pixel] = int(blue)
+
 		// safety check to make sure what im about
 		// to set is int the 160x144 bounds
 		if (finally < 0) || (finally > 143) || (pixel < 0) || (pixel > 159) {
@@ -333,11 +404,17 @@ func (core *Core) RenderTiles() {
 			core.ScanLineBG[pixel] = false
 		}
 
+		//fmt.Printf("red: %v, green: %v, blue: %v\n", red, green, blue)
 		core.Screen[pixel][finally-1][0] = red
 		core.Screen[pixel][finally-1][1] = green
 		core.Screen[pixel][finally-1][2] = blue
+
 	}
 
+	//if n >= 1 && n <= 2501 {
+	//	fname := fmt.Sprintf("/tmp/%d.gblive", n)
+	//	dumpGPUState(&dumper, n, fname)
+	//}
 }
 
 /*

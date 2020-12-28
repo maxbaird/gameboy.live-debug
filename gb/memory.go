@@ -166,8 +166,14 @@ func (core *Core) WriteMemory(address uint16, data byte) {
 
 		}
 		core.Memory.MainMemory[address] = data
+		//if(address == 65295){
+		//	fmt.Printf("MainMemory[%d]=%d\n", address, data)
+		//}
 	} else {
 		core.Memory.MainMemory[address] = data
+		//if(address == 65295){
+		//	fmt.Printf("MainMemory[%d]=%d\n", address, data)
+		//}
 	}
 	//log.Printf("Write to %X,data:%X\n", address, data)
 }

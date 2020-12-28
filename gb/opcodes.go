@@ -3,6 +3,7 @@ package gb
 import (
 	"github.com/HFO4/gbc-in-cloud/util"
 	"log"
+	"fmt"
 )
 
 /*
@@ -1481,7 +1482,7 @@ func (core *Core) OPC4() int {
 	if !core.CPU.Flags.Zero {
 		core.StackPush(core.CPU.Registers.PC)
 		core.CPU.Registers.PC = val
-		return 14
+		return 12
 	}
 	return 0
 }
@@ -1505,8 +1506,10 @@ func (core *Core) OP14() int {
 */
 func (core *Core) OP30() int {
 	address := int8(core.getParameter8())
+
 	if !core.CPU.Flags.Carry {
 		core.CPU.Registers.PC = uint16(int32(core.CPU.Registers.PC) + int32(address))
+		DebugPrint(fmt.Sprintf("Value assigned: %v", uint16(int32(core.CPU.Registers.PC) + int32(address)) ), 1268960, true)
 		return 4
 	}
 	return 0

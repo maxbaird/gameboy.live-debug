@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"github.com/HFO4/gbc-in-cloud/driver"
 	"github.com/HFO4/gbc-in-cloud/gb"
 	"github.com/HFO4/gbc-in-cloud/server"
@@ -18,12 +19,14 @@ var (
 	GUIMode    bool
 	ServerMode bool
 
-	ConfigPath string
-	ListenPort int
-	ROMPath    string
-	SoundOn    bool
-	FPS        int
-	Debug      bool
+	ConfigPath  string
+	ListenPort  int
+	ROMPath     string
+	SoundOn     bool
+	FPS         int
+	Debug       bool
+	OpcodeStart int
+	NoStateDump bool
 )
 
 func init() {
@@ -36,6 +39,8 @@ func init() {
 	flag.IntVar(&FPS, "f", 60, "Set the `FPS` in GUI mode")
 	flag.StringVar(&ConfigPath, "c", "", "Set the game option list `config` file path")
 	flag.StringVar(&ROMPath, "r", "", "Set `ROM` file path to be played in GUI mode")
+	flag.IntVar(&OpcodeStart, "o", 1, "The opcode from which the emulator should start dumping its state")
+	flag.BoolVar(&NoStateDump, "n", false, "Disables dumping of the emulator's state")
 }
 
 func startGUI() {
@@ -50,6 +55,16 @@ func startGUI() {
 	core.SpeedMultiple = 0
 	core.ToggleSound = SoundOn
 	core.Init(ROMPath)
+	core.OpcodeStart = OpcodeStart
+	core.OpcodeEnd = OpcodeStart + 500
+	core.OpcodeLimit = core.OpcodeEnd + 500
+	core.NoStateDump = NoStateDump
+
+	fmt.Println("OpcodeStart: ", core.OpcodeStart)
+	fmt.Println("OpcodeEnd: ", core.OpcodeEnd)
+	fmt.Println("OpcodeLimit: ", core.OpcodeLimit)
+	fmt.Println("NoStateDump: ", core.NoStateDump)
+
 	go core.DisplayDriver.Run(core.DrawSignal)
 	core.Run()
 }

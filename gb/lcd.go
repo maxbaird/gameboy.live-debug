@@ -120,7 +120,7 @@ func (core *Core) IsLCDEnabled() bool {
 /*
 	Scan line and draw line
 */
-func (core *Core) UpdateGraphics(cycles int) {
+func (core *Core) UpdateGraphics(cycles int, n int) {
 	//Set the LCD status register
 	core.SetLCDStatus()
 
