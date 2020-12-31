@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/HFO4/gbc-in-cloud/util"
 	"log"
-  "os"
 )
 
 type CPU struct {
@@ -94,6 +93,8 @@ func (core *Core) initCPU() {
 func (core *Core) ExecuteNextOPCode(n int) int {
 	extendedOpcode := 0
 	opcode := core.ReadMemory(core.CPU.Registers.PC)
+  DebugPrint(fmt.Sprintf("register.pc: %d", core.CPU.Registers.PC), 174983, false)
+  DebugPrint(fmt.Sprintf("register.pc: %d", core.CPU.Registers.PC), 174984, true)
 
 	core.CPU.Registers.PC++
 
@@ -101,21 +102,6 @@ func (core *Core) ExecuteNextOPCode(n int) int {
 		extendedOpcode = int(core.ReadMemory(core.CPU.Registers.PC))
 	}
 
-	InstructionCounter = n
-
-  if opcode == 0x30 {
-    fmt.Println("n = ", n)
-    fmt.Println("register.pc: +", core.CPU.Registers.PC)
-    os.Exit(-1)
-  }
-
-  //if n == 40607 {
-  //  fmt.Println("register.pc: ", core.CPU.Registers.PC)
-  //  os.Exit(-1)
-  //}
-  //if n == 1268960 {
-  //  fmt.Println("reg.pc: ", core.CPU.Registers.PC)
-  //}
 
 	cycles := core.ExecuteOPCode(opcode)
 

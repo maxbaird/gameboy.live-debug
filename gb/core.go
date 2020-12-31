@@ -165,7 +165,7 @@ func (core *Core) Update() {
 			can stop halting.
 		*/
 		n++
-
+	  InstructionCounter = n
 
 		if core.NoStateDump{
 			if n == core.OpcodeLimit {
@@ -175,6 +175,7 @@ func (core *Core) Update() {
 		}
 
 		if !core.CPU.Halt {
+      //DebugPrint(fmt.Sprintf("before register.pc: %d", core.CPU.Registers.PC), 174983, false)
 			cycles = core.ExecuteNextOPCode(n)
 		}
 
