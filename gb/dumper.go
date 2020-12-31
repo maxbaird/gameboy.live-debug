@@ -46,6 +46,16 @@ func buildMemoryState(core *Core) string {
 	return str.String()
 }
 
+func buildInterruptState(core *Core) string {
+  var str strings.Builder
+  str.WriteString(fmt.Sprintf("PendingInterruptEnabled: %v\n", core.CPU.Flags.PendingInterruptEnabled))
+  str.WriteString(fmt.Sprintf("InterruptMaster: %v\n", core.CPU.Flags.InterruptMaster))
+  str.WriteString(fmt.Sprintf("Halt: %v\n", core.CPU.Halt))
+	str.WriteString("===========\n")
+
+  return str.String()
+}
+
 func writeToFile(filename string, data string) error {
 	file, err := os.Create(filename)
 	if err != nil {
@@ -70,6 +80,7 @@ func dumpState(core *Core, iteration int, opcode int, extendedOpcode int, cycles
 	str += "===========\n"
 	str += buildRegisterState(core)
 	str += "===========\n"
+  str += buildInterruptState(core)
 	str += buildMemoryState(core)
 	fname := fmt.Sprintf("%s%d%s", "/tmp/", iteration, ".gblive")
 

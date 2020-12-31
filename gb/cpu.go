@@ -102,7 +102,6 @@ func (core *Core) ExecuteNextOPCode(n int) int {
 		extendedOpcode = int(core.ReadMemory(core.CPU.Registers.PC))
 	}
 
-
 	cycles := core.ExecuteOPCode(opcode)
 
 	if core.NoStateDump{
@@ -111,6 +110,7 @@ func (core *Core) ExecuteNextOPCode(n int) int {
 		}
 	}
 
+  DebugPrint(fmt.Sprintf("register.pc: %d", core.CPU.Registers.PC), 174983, false)
 	return cycles
 }
 

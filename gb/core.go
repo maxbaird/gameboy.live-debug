@@ -180,6 +180,7 @@ func (core *Core) Update() {
 		}
 
 		cyclesThisUpdate += cycles
+    //DebugPrint(fmt.Sprintf("register.pc: %d", core.CPU.Registers.PC), 174984, false)
 		core.UpdateTimers(cycles)
 		core.UpdateGraphics(cycles, n)
 		cyclesThisUpdate += core.Interrupt()
@@ -204,7 +205,6 @@ func (core *Core) UpdateIO(cycles int) {
 	Check interrupt.
 */
 func (core *Core) Interrupt() int {
-
 	/*
 		If `EI`(Enable Interrupt) instruction was executed, Interrupt Mater Flag will
 		be enable in next execution cycle.
@@ -220,6 +220,7 @@ func (core *Core) Interrupt() int {
 		stop interrupt checking and return.
 	*/
 	if !core.CPU.Flags.InterruptMaster && !core.CPU.Halt {
+    DebugPrint("Got here3 returning", 174983, false)
 		return 0
 	}
 
