@@ -93,8 +93,6 @@ func (core *Core) initCPU() {
 func (core *Core) ExecuteNextOPCode(n int) int {
 	extendedOpcode := 0
 	opcode := core.ReadMemory(core.CPU.Registers.PC)
-  DebugPrint(fmt.Sprintf("register.pc: %d", core.CPU.Registers.PC), 174983, false)
-  DebugPrint(fmt.Sprintf("register.pc: %d", core.CPU.Registers.PC), 174984, true)
 
 	core.CPU.Registers.PC++
 
@@ -110,7 +108,6 @@ func (core *Core) ExecuteNextOPCode(n int) int {
 		}
 	}
 
-  DebugPrint(fmt.Sprintf("register.pc: %d", core.CPU.Registers.PC), 174983, false)
 	return cycles
 }
 

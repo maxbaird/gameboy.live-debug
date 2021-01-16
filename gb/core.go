@@ -220,7 +220,6 @@ func (core *Core) Interrupt() int {
 		stop interrupt checking and return.
 	*/
 	if !core.CPU.Flags.InterruptMaster && !core.CPU.Halt {
-    DebugPrint("Got here3 returning", 174983, false)
 		return 0
 	}
 

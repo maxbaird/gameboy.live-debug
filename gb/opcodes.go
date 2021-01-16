@@ -3,7 +3,7 @@ package gb
 import (
 	"github.com/HFO4/gbc-in-cloud/util"
 	"log"
-//	"fmt"
+	"fmt"
 )
 
 /*
@@ -37,11 +37,11 @@ func (core *Core) OPF8() int {
 	core.CPU.Flags.HalfCarry = ((tempVal & 0x10) == 0x10)
 	core.CPU.Flags.Carry = ((tempVal & 0x100) == 0x100)
 
-  if InstructionCounter == 174951 {
-    //Only done to match the output of topaz when testing
-    //blaarg's 02-interrupt.gb ROM
-    core.CPU.Registers.F = 48
-  }
+  //if InstructionCounter == 174951 {
+  //  //Only done to match the output of topaz when testing
+  //  //blaarg's 02-interrupt.gb ROM
+  //  core.CPU.Registers.F = 48
+  //}
 	return 0
 }
 
@@ -69,9 +69,12 @@ func (core *Core) OPF2() int {
 func (core *Core) OPE8() int {
 	origin1 := core.CPU.Registers.SP
 	origin2 := int8(core.getParameter8())
+  //DebugPrint(fmt.Sprintf("origin1: %d", origin1), 747736, false);
+  //DebugPrint(fmt.Sprintf("origin2: %d", origin2), 747736, false);
 	res := uint16(int32(core.CPU.Registers.SP) + int32(origin2))
 	tmpVal := origin1 ^ uint16(origin2) ^ res
 	core.CPU.Registers.SP = res
+  //DebugPrint(fmt.Sprintf("register.sp: %d", core.CPU.Registers.SP), 747736, true);
 
 	core.CPU.Flags.Zero = false
 	core.CPU.Flags.Sub = false
@@ -107,15 +110,22 @@ func (core *Core) OPDE() int {
 	if core.CPU.Flags.Carry {
 		carry = 1
 	}
+  DebugPrint(fmt.Sprintf("register.pc: %d", core.CPU.Registers.PC), 1088330, true);
 	val2 := core.getParameter8()
 	origin := core.CPU.Registers.A
 	dirtySum := int16(core.CPU.Registers.A) - int16(val2) - carry
+  DebugPrint(fmt.Sprintf("regA: %d", core.CPU.Registers.A), 1088330, false);
+  DebugPrint(fmt.Sprintf("val2: %d", val2), 1088330, false);
+  DebugPrint(fmt.Sprintf("carry: %d", carry), 1088330, false);
+  DebugPrint(fmt.Sprintf("dirtySum: %d", dirtySum), 1088330, true);
+
 	total := byte(dirtySum)
 	core.CPU.Registers.A = total
 
 	core.CPU.Flags.Zero = total == 0
 	core.CPU.Flags.Sub = true
 	core.CPU.Flags.HalfCarry = int16(origin&0x0F)-int16(val2&0xF)-carry < 0
+  //DebugPrint(fmt.Sprintf("halfCarry: %d", int16(origin&0x0F)-int16(val2&0xF)-carry), 1087094, true);
 	core.CPU.Flags.Carry = dirtySum < 0
 	core.CPU.updateAFLow()
 	return 0
@@ -243,6 +253,8 @@ func (core *Core) OPCE() int {
 	}
 	origin1 := core.CPU.Registers.A
 	origin2 := core.getParameter8()
+  DebugPrint(fmt.Sprintf("origin1: %d", origin1), 952832, false);
+  //DebugPrint(fmt.Sprintf("origin2: %d", origin2), 952832, true);
 	res := int16(core.CPU.Registers.A) + int16(origin2) + carry
 
 	core.CPU.Registers.A = byte(res)
@@ -617,6 +629,10 @@ func (core *Core) OP98() int {
 	val := core.CPU.Registers.B
 	origin := core.CPU.Registers.A
 	res := int16(core.CPU.Registers.A) - int16(val) - carry
+  //DebugPrint(fmt.Sprintf("initialValue: %d", core.CPU.Registers.A), 1449955, false);
+  //DebugPrint(fmt.Sprintf("value: %d", val), 1449955, false);
+  //DebugPrint(fmt.Sprintf("carry: %d", carry), 1449955, false);
+  //DebugPrint(fmt.Sprintf("res: %d", res), 1449955, true);
 	final := byte(res)
 
 	core.CPU.Registers.A = final
@@ -1612,6 +1628,8 @@ func (core *Core) OP1D() int {
 func (core *Core) OPD6() int {
 	val := core.getParameter8()
 	origin := core.CPU.Registers.A
+  //DebugPrint(fmt.Sprintf("origin: %d", origin), 100004, false);
+  //DebugPrint(fmt.Sprintf("val: %d", val), 100004, true);
 	res := int16(core.CPU.Registers.A) - int16(val)
 	final := byte(res)
 	core.CPU.Registers.A = final
